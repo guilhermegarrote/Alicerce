@@ -14,17 +14,18 @@ body {
   font-family: montserrat, sans-serif;
   width: 100%;
   min-height: 100vh;
-  background-color: #212121;
+  background-image: url("img/background.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .card {
-  width: 20vw;
-  height: 30vw;
-  min-width: 250px;
-  min-height: 375px;
+  width: 282px;
+  height: 375px;
   perspective: 1000px;
 }
 
@@ -57,19 +58,16 @@ body {
 }
 
 .card__face--front {
-  background-image: linear-gradient(to bottom right, var(--primary), var(--secondary));
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .card__face--front h2 {
-  color: #FFF;
   font-size: 32px;
 }
 
 .card__face--back {
-  background-color: var(--light);
   transform: rotateY(180deg);
 }
 
@@ -108,7 +106,7 @@ body {
 }
 
 .card__header h2 {
-  color: #FFF;
+  color: transparent;
   font-size: 32px;
   font-weight: 900;
   text-transform: uppercase;
