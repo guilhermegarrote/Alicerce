@@ -3,10 +3,15 @@ const card = document.querySelector(".card__inner");
 let startValue = 0;
 let endValue = 0;
 let rotationValue = 0;
+let lastTimestamp = 0;
+let rotationInProgress = false;
 const sensitivity = 0.35;
-
+const maxRotation = 360;
+const maxRotationPerSwipe = 200;
 function handleStart(e) {
   startValue = e.clientX || e.touches[0].clientX;
+  lastTimestamp = Date.now();
+  rotationInProgress = true;
   addListeners();
 }
 
@@ -22,12 +27,29 @@ function handleSwipe() {
   const direction = swipeDistance > 0 ? 1 : -1;
   rotationValue += Math.abs(swipeDistance) * sensitivity * direction;
 
-  card.style.transform = `rotateY(${rotationValue}deg)`;
+  if (rotationInProgress) {
+    const timestamp = Date.now();
+    const timeElapsed = timestamp - lastTimestamp;
+
+    // Verifica se a pessoa continua rolando sem levantar o dedo
+    if (timeElapsed > 100) {
+      rotationInProgress = false;
+    }
+
+    // Limita a rotação por rolagem a uma vez e meia
+    if (Math.abs(rotationValue) > maxRotationPerSwipe) {
+      rotationValue = maxRotationPerSwipe * direction;
+    }
+
+    card.style.transform = `rotateY(${rotationValue}deg)`;
+    lastTimestamp = timestamp;
+  }
 }
 
 function handleEnd() {
   startValue = 0;
   endValue = 0;
+  rotationInProgress = false;
   removeListeners();
 }
 
