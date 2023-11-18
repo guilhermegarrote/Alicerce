@@ -21,6 +21,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-x: hidden;
 }
 
 .card {
@@ -34,8 +35,8 @@ body {
   height: 100%;
   transition: transform 1s;
   transform-style: preserve-3d;
-  cursor: pointer;
   position: relative;
+  display: flex; /* Adicionando esta linha para permitir a rolagem horizontal com o toque/drag do usuário */
 }
 
 .card__inner.is-flipped {
