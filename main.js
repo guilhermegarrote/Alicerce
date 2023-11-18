@@ -1,22 +1,17 @@
-const cardContainer = document.querySelector(".card-container");
 const card = document.querySelector(".card__inner");
 let startValue = 0;
 let endValue = 0;
-let rotationValue = 0;
-let lastTimestamp = 0;
 let rotationInProgress = false;
-const sensitivity = 0.35;
-const maxRotation = 360;
-const maxRotationPerSwipe = 200;
+let currentRotation = 0;
+
 function handleStart(e) {
   startValue = e.clientX || e.touches[0].clientX;
-  lastTimestamp = Date.now();
   rotationInProgress = true;
   addListeners();
 }
 
 function handleMove(e) {
-  if (!startValue) return;
+  if (!startValue || !rotationInProgress) return;
 
   endValue = e.clientX || e.touches[0].clientX;
   handleSwipe();
@@ -25,25 +20,12 @@ function handleMove(e) {
 function handleSwipe() {
   const swipeDistance = endValue - startValue;
   const direction = swipeDistance > 0 ? 1 : -1;
-  rotationValue += Math.abs(swipeDistance) * sensitivity * direction;
+  const rotationAmount = Math.abs(swipeDistance);
 
-  if (rotationInProgress) {
-    const timestamp = Date.now();
-    const timeElapsed = timestamp - lastTimestamp;
+  // Alterna entre 0 e 180 graus
+  currentRotation = direction === 1 ? 180 : 0;
 
-    // Verifica se a pessoa continua rolando sem levantar o dedo
-    if (timeElapsed > 100) {
-      rotationInProgress = false;
-    }
-
-    // Limita a rotação por rolagem a uma vez e meia
-    if (Math.abs(rotationValue) > maxRotationPerSwipe) {
-      rotationValue = maxRotationPerSwipe * direction;
-    }
-
-    card.style.transform = `rotateY(${rotationValue}deg)`;
-    lastTimestamp = timestamp;
-  }
+  card.style.transform = `rotateY(${currentRotation}deg)`;
 }
 
 function handleEnd() {
@@ -54,20 +36,20 @@ function handleEnd() {
 }
 
 function addListeners() {
-  cardContainer.addEventListener("mousemove", handleMove);
-  cardContainer.addEventListener("mouseup", handleEnd);
+  document.addEventListener("mousemove", handleMove);
+  document.addEventListener("mouseup", handleEnd);
 
-  cardContainer.addEventListener("touchmove", handleMove);
-  cardContainer.addEventListener("touchend", handleEnd);
+  document.addEventListener("touchmove", handleMove);
+  document.addEventListener("touchend", handleEnd);
 }
 
 function removeListeners() {
-  cardContainer.removeEventListener("mousemove", handleMove);
-  cardContainer.removeEventListener("mouseup", handleEnd);
+  document.removeEventListener("mousemove", handleMove);
+  document.removeEventListener("mouseup", handleEnd);
 
-  cardContainer.removeEventListener("touchmove", handleMove);
-  cardContainer.removeEventListener("touchend", handleEnd);
+  document.removeEventListener("touchmove", handleMove);
+  document.removeEventListener("touchend", handleEnd);
 }
 
-cardContainer.addEventListener("mousedown", handleStart);
-cardContainer.addEventListener("touchstart", handleStart);
+card.addEventListener("mousedown", handleStart);
+card.addEventListener("touchstart", handleStart);
